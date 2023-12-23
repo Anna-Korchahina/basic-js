@@ -23,9 +23,9 @@ const {
  */
 class VigenereCipheringMachine {
 
-  constructor(direct = true, reverse = false) {
+  constructor(direct = true) {
     this.direct = direct;
-    this.reverse = reverse;
+    // this.reverse = reverse;
     this.keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   }
   encrypt(message, key) {
@@ -71,22 +71,57 @@ class VigenereCipheringMachine {
       j += 1;
     }
 
-    return result;
+
+    if (this.direct) {
+      return result;
+    }
+
+    return result.split('').reverse().join('');
 
   }
 
+  decrypt(encryptedMessage, key) {
+    if (!encryptedMessage || !key) {
+      throw new Error("Incorrect arguments!");
+    }
 
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    encryptedMessage = encryptedMessage.toUpperCase();
+    key = key.toUpperCase();
+
+    const messageLenght = encryptedMessage.length;
+    let keyLenght = key.length,
+      result = '';
+
+    if (keyLenght < messageLenght) {
+      key = key.repeat(Math.ceil(messageLenght / keyLenght));
+    }
+
+    const arrayKeys = this.keys.split('');
+
+    keyLenght = key.length;
+
+    let j = 0; // index for arrayKeys
+    for (let i = 0; i < messageLenght; i += 1) {
+      const indexKey = arrayKeys.indexOf(key[j]);
+      const indexMessage = arrayKeys.indexOf(encryptedMessage[i]);
+
+      if (indexMessage === -1) {
+        result += encryptedMessage[i];
+        continue;
+      }
+
+      const shiftIndex = (26 + this.keys.indexOf(encryptedMessage[i]) - this.keys.indexOf(key[j])) % 26;
+      result += arrayKeys[shiftIndex];
+      j += 1;
+    }
+
+    if (this.direct) {
+      return result;
+    }
+
+    return result.split('').reverse().join('');
 
   }
-  // decrypt(encryptedMessage, key) {
-  //   if (!encryptedMessage || !key) {
-  //     throw new Error("Incorrect arguments!");
-  //   }
-
-  // }
 }
 
 module.exports = {

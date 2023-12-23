@@ -52,21 +52,21 @@ function encrypt(message, key) {
         // console.log(shiftIndex);
         if (shiftIndex < 26) {
             result += arrayKeys[shiftIndex];
-            j  += 1;
+            j += 1;
             // console.log(arrayKeys[shiftIndex]);
             continue;
         }
 
-        const shiftIndexDivision = shiftIndex%26;
+        const shiftIndexDivision = shiftIndex % 26;
         console.log(shiftIndex, shiftIndexDivision, arrayKeys[shiftIndexDivision]);
         result += arrayKeys[shiftIndexDivision];
-        j  += 1;
-        
-        
+        j += 1;
+
+
     }
 
 
-    console.log(result);
+    console.log(result.split('').reverse().join(''));
     // ovnlqbpvt hznzouz
 }
 
@@ -76,7 +76,61 @@ function decrypt(encryptedMessage, key) {
         throw new Error("Incorrect arguments!");
     }
 
+    encryptedMessage = encryptedMessage.toUpperCase();
+    key = key.toUpperCase();
+    const messageLenght = encryptedMessage.length;
+    let keyLenght = key.length;
+    // const keysLenght = message.length;
+    if (keyLenght < messageLenght) {
+        key = key.repeat(Math.ceil(messageLenght / keyLenght));
+    }
+
+
+    let result = '';
+
+    const arrayKeys = keys_.split('');
+
+    keyLenght = key.length;
+    // console.log(message, key, messageLenght, keyLenght, arrayKeys);
+
+    let j = 0; // index for arrayKeys
+    for (let i = 0; i < messageLenght; i += 1) {
+        // console.log(key[i]);
+        const indexKey = arrayKeys.indexOf(key[j]);
+        // console.log(indexKey);
+        const indexMessage = arrayKeys.indexOf(encryptedMessage[i]);
+        // console.log(indexMessage);
+
+        if (indexMessage === -1) {
+            result += encryptedMessage[i];
+            continue;
+        }
+
+        const shiftIndex = indexMessage - indexKey;
+        // console.log(shiftIndex);
+        if (shiftIndex < 26 && shiftIndex > -1) {
+            result += arrayKeys[shiftIndex];
+            j += 1;
+            // console.log(arrayKeys[shiftIndex]);
+            continue;
+        }
+
+        // const shiftIndexDivision = shiftIndex % 26;
+        const shiftIndexDivision = 26 + shiftIndex;
+        console.log(shiftIndex, shiftIndexDivision, arrayKeys[shiftIndexDivision]);
+        result += arrayKeys[shiftIndexDivision];
+        j += 1;
+
+
+    }
+
+
+    // console.log(result.split('').reverse().join(''));
+    console.log(result);
 }
 
 // encrypt('attacking tonight', 'OCULORHINOLARINGOLOGY');
-encrypt('attack at dawn!', 'alphonse');
+// encrypt('attack at dawn!', 'alphonse');
+
+decrypt('UWJJW XAGWLNFM VNNNDXHVWWL :)', 'js');
+// (directMachine.decrypt('UWJJW XAGWLNFM VNNNDXHVWWL :)', 'js'), 'LEARN FRONTEND DEVELOPMENT :)');
